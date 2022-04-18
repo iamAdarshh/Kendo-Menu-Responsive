@@ -1,8 +1,10 @@
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref, Ref } from "vue";
 import { Menu, MenuItemModel, MenuItemArrow } from "@progress/kendo-vue-layout";
 
 interface Props {
+  isMobile: Ref<boolean>;
+
   navs: MenuItemModel[] | undefined;
 }
 
@@ -80,7 +82,7 @@ export default defineComponent({
   name: "TheMainMenu",
   components: {
     "k-menu": Menu,
-    MenuItemArrow,
+    // MenuItemArrow,
   },
   setup() {
     // get the menuItems
@@ -93,48 +95,73 @@ export default defineComponent({
     navs.forEach((el) => addRenderLink(el));
     navs.forEach((el) => addSubMenuTitle(el));
 
+    const isMobile = ref(true);
     return {
       navs,
+      isMobile,
     } as Props;
+  },
+  methods: {
+    toggleNavMenu() {
+      this.isMobile = !this.isMobile;
+    },
   },
 });
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg fixed-start navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
+  <link
+    rel="stylesheet"
+    href="https://dashkit.goodthemes.co/assets/css/theme.bundle.css"
+  />
+  <nav
+    class="navbar navbar-vertical navbar-vertical-sm fixed-start navbar-expand-md navbar-dark"
+  >
+    <!-- NavMenu Body -->
+    <div class="container-fluid">
+      <!-- Navbar Toggle Button -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        @click="toggleNavMenu"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <!-- Adding Kendo Menu -->
-      <ul class="navbar-nav mr-auto">
-        <k-menu :items="navs">
-          <template v-slot:linkRender="{ props }">
-            <div class="mx-3">
-              <span :class="`k-icon k-i-${props.item.icon}`" class="mx-2">
-              </span>
-              {{ props.item.text }}
-              <MenuItemArrow
+      <!-- Navbar Brand -->
+      <a class="navbar-brand" href="#">N</a>
+      <div class="collapse navbar-collapse show" v-if="isMobile">
+        <!-- Divider -->
+        <hr class="navbar-divider d-none d-md-block mt-0 mb-3" />
+        <!--Menu Items -->
+        <ul class="navbar-nav">
+          <k-menu :items="navs" :vertical="true">
+            <template v-slot:linkRender="{ props }">
+              <div style="text-align: center" class="my-3">
+                <span
+                  :class="`k-icon k-i-${props.item.icon}`"
+                  class="mx-2"
+                  style="color: white"
+                >
+                </span>
+                <span class="d-md-none" style="color:white">{{ props.item.text }}</span>
+                <!-- <MenuItemArrow
                 v-if="props.item.items && props.item.items.length > 0"
                 :itemId="props.itemId"
                 :vertical-menu="false"
                 :dir="props.dir"
                 key="1"
-              />
-            </div>
-          </template>
-        </k-menu>
-      </ul>
+              /> -->
+              </div>
+            </template>
+          </k-menu>
+        </ul>
+      </div>
     </div>
   </nav>
 </template>
