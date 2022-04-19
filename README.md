@@ -7,6 +7,9 @@ There are two main problems:
 - Showing active navs
 - Make kendo Menu Responsive
 
+Note:
+Before running this application, create a text file with name kendo-ui-license, and inside this file add your license key. Add this file inside Root Folder.
+
 ## Project setup
 ```
 npm install
